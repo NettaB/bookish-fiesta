@@ -4,34 +4,29 @@ import fetchData from './http-service';
 import Graph from "./graph";
 
 const App = () => {
-  const [dataList, setDataList] = useState(null);
+  const [data, setData] = useState({dataList: null, maximum: null});
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  const findHighest = (list) => {
-    let highestValue = 0;
-    let highestIndex = 0;
-    list.forEach((dataPoint, i) => {
-      if (dataPoint.y > highestValue) {
-        highestValue = dataPoint.y;
-        highestIndex = i;
-      }
-    });
-    list[highestIndex].color = 'red'
-  };
-
-  const findHighestIndex = (acc, currentValue, currentIndex) => {
-    if (currentValue.y > acc.val) {
-      acc.val = currentValue.y;
+  const findMax = (acc, currentValue, currentIndex) => {
+    if (currentValue.y > acc.y) {
+      acc = {...currentValue};
       acc.i = currentIndex;
     }
     return acc;
   };
 
   useEffect(() => {
-    if(!dataList) {
+    if(!data.dataList) {
       fetchData().then(dataList => {
-        const highest = dataList.reduce(findHighestIndex, {val: 0, i: 0});
-        dataList[highest.i].color = 'red';
-        setDataList(dataList)
+        if (!dataList) {
+          setErrorMessage('Could not fetch data, retrying');
+          return;
+        }
+        const maximum = dataList.reduce(findMax, {y: 0, x: 0, i: 0});
+        dataList[maximum.i].color = 'indianred';
+        dataList[maximum.i].size = '4';
+        setData({dataList, maximum});
+        setErrorMessage(null);
       })
     }
   });
@@ -39,9 +34,15 @@ const App = () => {
   return (
     <div className="App">
       <h1>
-        March 18, 2018, Mount Washington NH
+        March 18 2018, Mount Washington NH
       </h1>
-      {dataList ? <Graph data={dataList}/> : <h3>Loading...</h3>}
+      {errorMessage && <h3 className='error'>{errorMessage}</h3>}
+      {data.maximum ?
+        <h3>
+          Hats are most likely to fly at {new Date(data.maximum.x).toLocaleTimeString('en-US', {timeZone: 'America/New_York'})} with a wind gust speed of {data.maximum.y} kph
+        </h3> :
+        <h3 className='loading'>Loading...</h3>}
+      {data.dataList && <Graph data={data.dataList}/>}
     </div>
   );
 };
