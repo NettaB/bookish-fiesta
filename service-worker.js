@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/bookish-fiesta/precache-manifest.9aadb1ecfa04ccae2ec2059aa655f5ec.js"
+  "/bookish-fiesta/precache-manifest.85a3c7154342975fd05c5652c1ba25aa.js"
 );
 
 workbox.clientsClaim();
