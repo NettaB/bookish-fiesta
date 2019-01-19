@@ -1,10 +1,6 @@
 import React from 'react';
 import { XYPlot, XAxis, YAxis, MarkSeries } from 'react-vis';
-
-const dateOptions = {hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York', hour12: false};
-
-const speedFormatter = val => `${val} kph`;
-const timeFormatter = timeStamp => new Date(timeStamp).toLocaleTimeString('en-US',dateOptions);
+import { timeFormatter, speedFormatter} from './formatter-util';
 
 export default function Graph(props) {
   return (

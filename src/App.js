@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import fetchData from './http-service';
-import Graph from "./graph";
+import Graph from './graph';
+import { timeFormatter } from './formatter-util';
 
 const App = () => {
   const [data, setData] = useState({dataList: null, maximum: null});
@@ -38,9 +39,7 @@ const App = () => {
       </h1>
       {errorMessage && <h3 className='error'>{errorMessage}</h3>}
       {data.maximum ?
-        <h3>
-          Hats are most likely to fly at {new Date(data.maximum.x).toLocaleTimeString('en-US', {timeZone: 'America/New_York'})} with a wind gust speed of {data.maximum.y} kph
-        </h3> :
+        <h3>Hats are most likely to fly at {timeFormatter(data.maximum.x)} with a wind gust speed of {data.maximum.y} kph</h3> :
         <h3 className='loading'>Loading...</h3>}
       {data.dataList && <Graph data={data.dataList}/>}
     </div>
