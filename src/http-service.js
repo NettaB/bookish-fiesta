@@ -28,11 +28,6 @@ const options = {
   body: JSON.stringify(data)
 };
 
-const dataPointFactory = dataPoint => ({
-  x: new Date(dataPoint.observation_time.value).getTime(),
-  y: dataPoint.wind_gust.value,
-  size: 1
-});
 
 export default function fetchData() {
   return fetch(URL, options)
@@ -43,7 +38,6 @@ export default function fetchData() {
       throw Error(response.statusText);
     })
     .then(response => response.json())
-    .then(data => data.map(dataPointFactory))
     .catch(errorMessage => {
       console.error(errorMessage);
       return null;
